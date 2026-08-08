@@ -1,0 +1,25 @@
+{
+  "name": "goit-js-hw-15-",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "parcel src/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/filiplitvin/goit-js-hw-15-.git"
+  },
+  "author": "Filip Litvin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/filiplitvin/goit-js-hw-15-/issues"
+  },
+  "homepage": "https://github.com/filiplitvin/goit-js-hw-15-#readme",
+  "devDependencies": {
+    "@parcel/transformer-inline-string": "^2.16.4",
+    "parcel": "^2.16.4"
+  },
+  "dependencies": {
+    "handlebars": "^4.7.9"
+  }
+}
