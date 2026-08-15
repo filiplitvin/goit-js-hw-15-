@@ -2,35 +2,49 @@ import Handlebars from "handlebars";
 import templateSource from "bundle-text:../notes.hbs";
 import * as storage from "../helpers/storage.js";
 import "./form.js";
-const bookmarkInput = document.querySelector("#bookmarkInput");
+import { renderBookmarks } from "./render-bookmarks.js";
+const BOOKMARKS_KEY = "bookmarks";
+
 const addBtn = document.querySelector("#addBookmarkBtn");
-const bookmarkList = document.querySelector("#bookmarkList");
+const listContainer = document.querySelector("#bookmarkList");
+const urlInput = document.querySelector("#bookmarkInput");
 
-let bookmarks = storage.load("bookmarks") || [];
+let bookmarkList = storage.load(BOOKMARKS_KEY) || [];
 
-const template = Handlebars.compile(templateSource);
+renderBookmarks(listContainer, bookmarkList);
+//=======================================================
+const handleAdd = (event) => {
+  event.preventDefault();
 
-const markup = () => {
-  bookmarkList.innerHTML = template({ bookmarks });
+  const url = urlInput.value;
+  if (!url) return;
 
-  const deleteBtn = document.querySelector("[data-delete]");
-  deleteBtn && deleteBtn.addEventListener("click", handleRemove);
-};
+  const bookmark = {
+    id: crypto.randomUUID(),
+    url: url,
+  };
 
-const handleAdd = () => {
-  const url = bookmarkInput.value;
-  bookmarks.push(url);
-  storage.save("bookmarks", bookmarks);
-  bookmarkInput.value = "";
-  markup();
-};
+  bookmarkList.push(bookmark);
+  storage.save(BOOKMARKS_KEY, bookmarkList);
 
-const handleRemove = () => {
-  bookmarks = [];
-  storage.remove("bookmarks");
-  markup();
+  renderBookmarks(listContainer, bookmarkList);
+  urlInput.value = "";
 };
 
 addBtn.addEventListener("click", handleAdd);
+//========================================================
+const handleActions = (event) => {
+  const target = event.target;
+  const item = target.closest("[data-id]");
 
-markup();
+  if (item) {
+    const id = item.dataset.id;
+    const index = bookmarkList.findIndex((item) => item.id === id);
+
+    bookmarkList.splice(index, 1);
+    storage.save(BOOKMARKS_KEY, bookmarkList);
+    renderBookmarks(listContainer, bookmarkList);
+  }
+};
+
+listContainer.addEventListener("click", handleActions);
